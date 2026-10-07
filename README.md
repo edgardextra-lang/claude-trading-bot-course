@@ -63,10 +63,26 @@ What to take from it:
 
 Reproduce it: `python -m bot.robustness 1h 205` and `python -m bot.robustness 4h 820`. Your numbers will differ as new candles arrive.
 
+## Risk: the same trades, different bet size
+
+`python -m bot.risk 4h 820` keeps the golden cross untouched and changes only how much goes into each trade.
+
+| Variant | Average return | Average drawdown | Worst drawdown |
+|---|---|---|---|
+| Whole account in every trade | +159.0% | -43.6% | -63.7% |
+| Risk 2% of the account per trade | +52.9% | -21.6% | -36.8% |
+| Risk 1% | +26.8% | -13.0% | -24.4% |
+| Risk 0.5% | +13.5% | -7.4% | -14.8% |
+| Whole account, kill switch at -25% | +142.3% | -31.4% | -43.3% |
+
+Sizing down does not make the rule better; it decides how much of it you can live through. At 1% risk the best rule in this repo made about 12% a year. The kill switch tripped on 7 of 8 coins and stops new trades for good; it cannot shrink the fall that triggers it.
+
+**Funding** (the hourly fee between traders, charged from Hyperliquid's public history) takes the whole-account average from +159.0% to +126.3%. The first tables do not include it.
+
 ## Run it
 
 ```bash
-python -m pytest -q                      # 39 tests
+python -m pytest -q                      # 46 tests
 python -m bot.robustness                 # the table above
 python -m bot.runner --coin BTC --once   # dry-run: logs what it would do, sends nothing
 python -m bot.monitor runs/log_BTC_dry.jsonl
@@ -89,6 +105,6 @@ Before real money, know what this bot does not do:
 
 ## Layout
 
-`bot/data.py` price history · `bot/strategy.py` the rule · `bot/breakout.py`, `bot/rsi_dip.py`, `bot/ma_cross.py` three more rules · `bot/tune.py` the overfitting experiment · `bot/backtest.py` replay with fees · `bot/metrics.py` return, drawdown, capital for a daily target · `bot/robustness.py` the honest test · `bot/runner.py` dry-run and live · `bot/monitor.py` the two numbers to watch · `tests/` 39 tests.
+`bot/data.py` price history · `bot/strategy.py` the rule · `bot/breakout.py`, `bot/rsi_dip.py`, `bot/ma_cross.py` three more rules · `bot/tune.py` the overfitting experiment · `bot/risk.py` position size, kill switch and funding · `bot/backtest.py` replay with fees · `bot/metrics.py` return, drawdown, capital for a daily target · `bot/robustness.py` the honest test · `bot/runner.py` dry-run and live · `bot/monitor.py` the two numbers to watch · `tests/` 46 tests.
 
 MIT licence.

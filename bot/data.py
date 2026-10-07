@@ -1,5 +1,5 @@
 """Price history from Hyperliquid's public API. No key needed. Results are cached on disk."""
-import json, time, urllib.request
+import json, time, urllib.request, urllib.error
 from pathlib import Path
 
 API = "https://api.hyperliquid.xyz/info"
@@ -43,3 +43,45 @@ def recent(coin, interval, n=400):
     """The latest n closed candles, for the live runner. Not cached."""
     end = int(time.time() * 1000); out = parse(fetch_remote(coin, interval, end - (n + 2) * STEP_MS[interval], end))
     return [c for c in out if c["t"] + STEP_MS[interval] <= end][-n:]
+
+
+def post(body, tries=6):
+    """One request, waiting and retrying when the exchange says we are asking too fast."""
+    for k in range(tries):
+        try: return json.loads(urllib.request.urlopen(urllib.request.Request(API, data=body, headers={"Content-Type": "application/json"}), timeout=30).read())
+        except urllib.error.HTTPError as e:
+            if e.code != 429 or k == tries - 1: raise
+            time.sleep(5 * (k + 1))
+
+
+def fetch_funding(coin, start_ms, end_ms):
+    """Hourly funding rates. The API returns 500 records per request, oldest first, so walk forwards."""
+    out, start = [], start_ms
+    while start < end_ms:
+        body = json.dumps({"type": "fundingHistory", "coin": coin, "startTime": start, "endTime": end_ms}).encode()
+        chunk = post(body)
+        if not chunk: break
+        out += [[int(r["time"]), float(r["fundingRate"])] for r in chunk]
+        if len(chunk) < 500: break
+        start = int(chunk[-1]["time"]) + 1; time.sleep(0.6)
+    return out
+
+
+def funding(coin, start_ms, end_ms, cache_dir="data", fetch=fetch_funding):
+    if not coin.isalnum(): raise ValueError("coin must be letters and digits only")
+    path = Path(cache_dir) / f"{coin}_funding_{start_ms}_{end_ms}.json"
+    if path.exists(): return json.loads(path.read_text())
+    out = fetch(coin, start_ms, end_ms); path.parent.mkdir(parents=True, exist_ok=True); tmp = path.with_suffix(".tmp"); tmp.write_text(json.dumps(out)); tmp.replace(path)
+    return out
+
+
+def funding_per_candle(candles, rates, step_ms):
+    """Sum the hourly rates that fall inside each candle. A long position PAYS a positive rate."""
+    out, j, rates = [], 0, sorted(rates)
+    for c in candles:
+        tot = 0.0
+        while j < len(rates) and rates[j][0] < c["t"] + step_ms:
+            if rates[j][0] >= c["t"]: tot += rates[j][1]
+            j += 1
+        out.append(tot)
+    return out

@@ -206,3 +206,36 @@ def test_cross_sells_when_the_fast_average_falls_back_below():
 def test_tuned_rule_with_default_settings_matches_the_original():
     cs = ramp(260, 100, 200) + ramp(40, 200, 170, t0=260) + ramp(60, 170, 230, t0=300) + ramp(60, 230, 150, t0=360)
     assert backtest.run(cs, rule=tune.pullback(20, 50, 2.0))["equity"] == pytest.approx(backtest.run(cs)["equity"])
+
+
+# ---- risk: position size, kill switch, funding ----
+def test_size_without_a_risk_setting_uses_the_whole_account():
+    assert backtest.size(1000.0, 100.0, 90.0, None) == 1000.0
+
+def test_size_loses_exactly_the_risk_at_the_stop():
+    n = backtest.size(1000.0, 100.0, 80.0, 0.01); assert n == pytest.approx(50.0) and n * (80.0 / 100.0 - 1) == pytest.approx(-10.0)      # 1% of 1000
+
+def test_size_never_exceeds_the_account():
+    assert backtest.size(1000.0, 100.0, 99.9, 0.02) == 1000.0
+
+def test_smaller_risk_means_a_smaller_swing():
+    cs = setup_long(lambda e: [candle(267, e, e, e, e), candle(268, e, e, e - 80, e - 70)])
+    full = backtest.run(cs, fee=0.0, slippage=0.0); small = backtest.run(cs, fee=0.0, slippage=0.0, risk=0.01)
+    assert small["trades"][0]["pnl"] == pytest.approx(-10.0, rel=0.2) and full["trades"][0]["pnl"] < small["trades"][0]["pnl"] < 0
+
+def test_kill_switch_stops_new_trades_for_good():
+    cs = setup_long(lambda e: [candle(267, e, e, e, e), candle(268, e, e, e - 80, e - 70)]); cs += ramp(260, cs[-1]["c"], cs[-1]["c"] + 150, t0=269)      # a losing trade, then a new uptrend
+    last = cs[-1]["c"]
+    for k in range(6): cs.append(candle(529 + k, last - k * 2.0, last - k * 2.0, last - (k + 1) * 2.0 - 0.5, last - (k + 1) * 2.0))
+    low = cs[-1]["c"]; cs.append(candle(535, low, low + 14, low, low + 13)); cs += flat(5, cs[-1]["c"], t0=536)                                           # a second buy signal
+    free = backtest.run(cs, fee=0.0, slippage=0.0, close_at_end=True); stopped = backtest.run(cs, fee=0.0, slippage=0.0, close_at_end=True, halt_dd=0.01)
+    assert len(free["trades"]) >= 2 and stopped["halted"] and len(stopped["trades"]) == 1
+
+def test_funding_is_charged_only_while_holding():
+    cs = setup_long(lambda e: [candle(267, e, e, e, e)] + flat(5, e, t0=268))
+    none = backtest.run(cs, fee=0.0, slippage=0.0, close_at_end=True); paid = backtest.run(cs, fee=0.0, slippage=0.0, close_at_end=True, funding=[0.001] * len(cs))
+    assert paid["funding_paid"] == pytest.approx(1000.0 * 0.001 * 6, rel=0.05) and paid["equity"][-1] == pytest.approx(none["equity"][-1] - paid["funding_paid"])
+
+def test_funding_per_candle_sums_the_hours_inside_each_candle():
+    cs = [{"t": 0}, {"t": 4 * 3600_000}]; rates = [[h * 3600_000, 0.01] for h in range(8)]
+    assert data.funding_per_candle(cs, rates, 4 * 3600_000) == pytest.approx([0.04, 0.04])

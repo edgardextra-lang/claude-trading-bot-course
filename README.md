@@ -43,8 +43,18 @@ The course then tests two more popular ideas with the same command (`python -m b
 | Pullback (above) | 3 of 8, -8.0% | 6 of 8, +11.8% | Loses to holding on all 8 at 1h; drawdowns to -70% at 4h |
 | Breakout (20-candle high) | 5 of 8, +21.2% | 3 of 8, +27.5% | 7 of 8 coins flat or negative in the first half at 1h; at 4h one coin (XRP +264%) carries the average, which is -6.2% without it |
 | RSI dip-buy (below 30) | 4 of 8, +2.7% | 3 of 8, +10.9% | Wins about 60% of trades yet loses to holding on 6 of 8; at 4h the two halves flip on 7 of 8 coins |
+| Golden cross (50 over 200) | 5 of 8, +12.9% | 8 of 8, +159.0% | Only 7 to 17 trades per coin (97 in all); two trades make 66% to 97% of each coin's gains; alpha score 0.9 to 1.9, below the 2 that would separate skill from simply being long in a rising market |
 
-None of the three passes. Each has one table, coin or number that would make a convincing advert.
+The first three fail. The golden cross is the only one worth studying further, and it is **not proven**: the sample is small, the eight coins moved together, and its drawdowns reach -64%. Each rule has one table, coin or number that would make a convincing advert (`python -m bot.robustness 4h 820 cross`).
+
+## The overfitting experiment
+
+`python -m bot.tune 4h 820` tries 27 settings of the pullback rule on the first half of the history and then runs them on the second half.
+
+- 4-hour candles: all 27 settings made money on the first half (best +67.2%). On the second half, 0 of 27 did, and the "best" one returned -7.2%.
+- 1-hour candles: 9 of 27 were profitable on the first half, 2 of 27 on the second. The first-half winner ranked 20th of 27 afterwards.
+
+Tuning found the settings that best described the past, not a better strategy.
 
 What to take from it:
 1. Fees turn a small gain into a loss (BTC 1h: +8.5% before fees, -4.5% after).
@@ -56,7 +66,7 @@ Reproduce it: `python -m bot.robustness 1h 205` and `python -m bot.robustness 4h
 ## Run it
 
 ```bash
-python -m pytest -q                      # 36 tests
+python -m pytest -q                      # 39 tests
 python -m bot.robustness                 # the table above
 python -m bot.runner --coin BTC --once   # dry-run: logs what it would do, sends nothing
 python -m bot.monitor runs/log_BTC_dry.jsonl
@@ -79,6 +89,6 @@ Before real money, know what this bot does not do:
 
 ## Layout
 
-`bot/data.py` price history · `bot/strategy.py` the rule · `bot/breakout.py` and `bot/rsi_dip.py` two more rules · `bot/backtest.py` replay with fees · `bot/metrics.py` return, drawdown, capital for a daily target · `bot/robustness.py` the honest test · `bot/runner.py` dry-run and live · `bot/monitor.py` the two numbers to watch · `tests/` 36 tests.
+`bot/data.py` price history · `bot/strategy.py` the rule · `bot/breakout.py`, `bot/rsi_dip.py`, `bot/ma_cross.py` three more rules · `bot/tune.py` the overfitting experiment · `bot/backtest.py` replay with fees · `bot/metrics.py` return, drawdown, capital for a daily target · `bot/robustness.py` the honest test · `bot/runner.py` dry-run and live · `bot/monitor.py` the two numbers to watch · `tests/` 39 tests.
 
 MIT licence.

@@ -9,8 +9,8 @@ from . import data, backtest, metrics, strategy
 COINS = ["BTC", "ETH", "SOL", "HYPE", "XRP", "DOGE", "SUI", "AVAX"]
 
 
-from . import breakout, rsi_dip
-RULES = {"pullback": strategy, "breakout": breakout, "rsi": rsi_dip}
+from . import breakout, rsi_dip, ma_cross
+RULES = {"pullback": strategy, "breakout": breakout, "rsi": rsi_dip, "cross": ma_cross}
 WARM = strategy.WARM              # every rule shares this warm-up, so all are measured over the same days
 
 

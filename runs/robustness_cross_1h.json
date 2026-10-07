@@ -1,0 +1,368 @@
+{
+ "interval": "1h",
+ "start_ms": 1773619199999,
+ "end_ms": 1791331199999,
+ "rows": [
+  {
+   "coin": "BTC",
+   "candles": 4920,
+   "days": 196,
+   "all": {
+    "total_return": 0.13792454747730631,
+    "max_drawdown": -0.11463844942765533,
+    "avg_daily_return": 0.0007022038904232821,
+    "days": 196.41666666666666,
+    "trades": 15,
+    "wins": 5,
+    "profit_factor": 1.9943297612329283,
+    "buy_hold": 0.221105671096393
+   },
+   "no_fees": {
+    "total_return": 0.1602743936647295,
+    "max_drawdown": -0.10651931324754227,
+    "avg_daily_return": 0.0008159918217975199,
+    "days": 196.41666666666666,
+    "trades": 15,
+    "wins": 6,
+    "profit_factor": 2.257132075368713,
+    "buy_hold": 0.221105671096393
+   },
+   "first_half": {
+    "total_return": -0.08182888688123946,
+    "max_drawdown": -0.09051665252912422,
+    "avg_daily_return": -0.0008335710038835938,
+    "days": 98.16666666666667,
+    "trades": 7,
+    "wins": 1,
+    "profit_factor": 0.11451340839709465,
+    "buy_hold": -0.166393079920636
+   },
+   "second_half": {
+    "total_return": 0.23716392376495765,
+    "max_drawdown": -0.07191825462014523,
+    "avg_daily_return": 0.0024149063090195097,
+    "days": 98.20833333333333,
+    "trades": 8,
+    "wins": 4,
+    "profit_factor": 5.711456009923498,
+    "buy_hold": 0.45832836126216736
+   }
+  },
+  {
+   "coin": "ETH",
+   "candles": 4920,
+   "days": 196,
+   "all": {
+    "total_return": 0.0787713220238151,
+    "max_drawdown": -0.16793132252109255,
+    "avg_daily_return": 0.00040104194496638995,
+    "days": 196.41666666666666,
+    "trades": 16,
+    "wins": 3,
+    "profit_factor": 1.3062764022930715,
+    "buy_hold": 0.26213092508539626
+   },
+   "no_fees": {
+    "total_return": 0.10142237271756649,
+    "max_drawdown": -0.15790341296751065,
+    "avg_daily_return": 0.0005163633740393712,
+    "days": 196.41666666666666,
+    "trades": 16,
+    "wins": 3,
+    "profit_factor": 1.4162412617609166,
+    "buy_hold": 0.26213092508539626
+   },
+   "first_half": {
+    "total_return": -0.16079731354047888,
+    "max_drawdown": -0.16079731354047888,
+    "avg_daily_return": -0.0016380031939607356,
+    "days": 98.16666666666667,
+    "trades": 9,
+    "wins": 0,
+    "profit_factor": 0.0,
+    "buy_hold": -0.2652192223106078
+   },
+   "second_half": {
+    "total_return": 0.28547172146814837,
+    "max_drawdown": -0.12453941246177602,
+    "avg_daily_return": 0.002906797333574697,
+    "days": 98.20833333333333,
+    "trades": 7,
+    "wins": 3,
+    "profit_factor": 3.4853324523509177,
+    "buy_hold": 0.708557674035599
+   }
+  },
+  {
+   "coin": "SOL",
+   "candles": 4920,
+   "days": 196,
+   "all": {
+    "total_return": 0.3859397355098204,
+    "max_drawdown": -0.1617491452973413,
+    "avg_daily_return": 0.0019649031930920003,
+    "days": 196.41666666666666,
+    "trades": 13,
+    "wins": 6,
+    "profit_factor": 2.971949414812853,
+    "buy_hold": 0.34341983679013177
+   },
+   "no_fees": {
+    "total_return": 0.40938430588467356,
+    "max_drawdown": -0.15847100885519438,
+    "avg_daily_return": 0.002084264603570676,
+    "days": 196.41666666666666,
+    "trades": 13,
+    "wins": 6,
+    "profit_factor": 3.179092531698606,
+    "buy_hold": 0.34341983679013177
+   },
+   "first_half": {
+    "total_return": -0.05201688846616703,
+    "max_drawdown": -0.1617491452973413,
+    "avg_daily_return": -0.0005298834139168118,
+    "days": 98.16666666666667,
+    "trades": 7,
+    "wins": 3,
+    "profit_factor": 0.5306650573239184,
+    "buy_hold": -0.18550927936052009
+   },
+   "second_half": {
+    "total_return": 0.38832600156774033,
+    "max_drawdown": -0.12079088474535493,
+    "avg_daily_return": 0.003954104385925231,
+    "days": 98.20833333333333,
+    "trades": 6,
+    "wins": 3,
+    "profit_factor": 5.566933789599636,
+    "buy_hold": 0.6400505592780352
+   }
+  },
+  {
+   "coin": "HYPE",
+   "candles": 4920,
+   "days": 196,
+   "all": {
+    "total_return": 0.35775934137864085,
+    "max_drawdown": -0.2070906930825368,
+    "avg_daily_return": 0.0018214306731199365,
+    "days": 196.41666666666666,
+    "trades": 13,
+    "wins": 6,
+    "profit_factor": 2.557783022750332,
+    "buy_hold": 1.3900213197441627
+   },
+   "no_fees": {
+    "total_return": 0.3807511278481934,
+    "max_drawdown": -0.20295098512231025,
+    "avg_daily_return": 0.0019384868621885115,
+    "days": 196.41666666666666,
+    "trades": 13,
+    "wins": 6,
+    "profit_factor": 2.7127884208249964,
+    "buy_hold": 1.3900213197441627
+   },
+   "first_half": {
+    "total_return": -0.06926693257650574,
+    "max_drawdown": -0.17236764542215388,
+    "avg_daily_return": -0.0007056054252275627,
+    "days": 98.16666666666667,
+    "trades": 8,
+    "wins": 2,
+    "profit_factor": 0.6052862565454421,
+    "buy_hold": 0.6779938640736309
+   },
+   "second_half": {
+    "total_return": 0.5106853345695179,
+    "max_drawdown": -0.11832579491679351,
+    "avg_daily_return": 0.005200020377457968,
+    "days": 98.20833333333333,
+    "trades": 5,
+    "wins": 4,
+    "profit_factor": 17.872895809055873,
+    "buy_hold": 0.4148184630538838
+   }
+  },
+  {
+   "coin": "XRP",
+   "candles": 4920,
+   "days": 196,
+   "all": {
+    "total_return": -0.06706024138624622,
+    "max_drawdown": -0.3104202572437713,
+    "avg_daily_return": -0.00034141828452904314,
+    "days": 196.41666666666666,
+    "trades": 16,
+    "wins": 2,
+    "profit_factor": 0.7914207953155663,
+    "buy_hold": 0.06747503566333801
+   },
+   "no_fees": {
+    "total_return": -0.04740866798689969,
+    "max_drawdown": -0.3042687756468869,
+    "avg_daily_return": -0.00024136784719677398,
+    "days": 196.41666666666666,
+    "trades": 16,
+    "wins": 2,
+    "profit_factor": 0.8457289456115481,
+    "buy_hold": 0.06747503566333801
+   },
+   "first_half": {
+    "total_return": -0.07035282378135743,
+    "max_drawdown": -0.12026106791406199,
+    "avg_daily_return": -0.0007166671352939636,
+    "days": 98.16666666666667,
+    "trades": 5,
+    "wins": 1,
+    "profit_factor": 0.20296638714446913,
+    "buy_hold": -0.2594151212553495
+   },
+   "second_half": {
+    "total_return": -0.002021409159711718,
+    "max_drawdown": -0.31042025724377165,
+    "avg_daily_return": -2.0582867981790934e-05,
+    "days": 98.20833333333333,
+    "trades": 11,
+    "wins": 1,
+    "profit_factor": 0.9920743063712371,
+    "buy_hold": 0.4351745301112391
+   }
+  },
+  {
+   "coin": "DOGE",
+   "candles": 4920,
+   "days": 196,
+   "all": {
+    "total_return": -0.07938551736990507,
+    "max_drawdown": -0.24567060804431695,
+    "avg_daily_return": -0.0004041689471526775,
+    "days": 196.41666666666666,
+    "trades": 19,
+    "wins": 3,
+    "profit_factor": 0.7860522841829618,
+    "buy_hold": 0.0008972921006249468
+   },
+   "no_fees": {
+    "total_return": -0.05631687835444166,
+    "max_drawdown": -0.24091256696607566,
+    "avg_daily_return": -0.0002867214850459482,
+    "days": 196.41666666666666,
+    "trades": 19,
+    "wins": 3,
+    "profit_factor": 0.8416595136246814,
+    "buy_hold": 0.0008972921006249468
+   },
+   "first_half": {
+    "total_return": -0.018792666251121304,
+    "max_drawdown": -0.11519697750678481,
+    "avg_daily_return": -0.00019143632853434265,
+    "days": 98.16666666666667,
+    "trades": 8,
+    "wins": 2,
+    "profit_factor": 0.8693370786422678,
+    "buy_hold": -0.2383378732040805
+   },
+   "second_half": {
+    "total_return": -0.06070429745189798,
+    "max_drawdown": -0.24567060804431706,
+    "avg_daily_return": -0.0006181175811818208,
+    "days": 98.20833333333333,
+    "trades": 11,
+    "wins": 1,
+    "profit_factor": 0.7368899119024959,
+    "buy_hold": 0.2951689819614347
+   }
+  },
+  {
+   "coin": "SUI",
+   "candles": 4920,
+   "days": 196,
+   "all": {
+    "total_return": 0.27630102517574584,
+    "max_drawdown": -0.3684200176642315,
+    "avg_daily_return": 0.0014067086559647647,
+    "days": 196.41666666666666,
+    "trades": 16,
+    "wins": 3,
+    "profit_factor": 1.7527436628414719,
+    "buy_hold": 0.25387178149847234
+   },
+   "no_fees": {
+    "total_return": 0.3030387208932124,
+    "max_drawdown": -0.36085882179868956,
+    "avg_daily_return": 0.0015428360843099485,
+    "days": 196.41666666666666,
+    "trades": 16,
+    "wins": 3,
+    "profit_factor": 1.8550104910895542,
+    "buy_hold": 0.25387178149847234
+   },
+   "first_half": {
+    "total_return": -0.041939477592878305,
+    "max_drawdown": -0.28410519548365065,
+    "avg_daily_return": -0.00042722727598857354,
+    "days": 98.16666666666667,
+    "trades": 6,
+    "wins": 1,
+    "profit_factor": 0.7794334780160591,
+    "buy_hold": -0.26324920967759113
+   },
+   "second_half": {
+    "total_return": 0.3543477796731951,
+    "max_drawdown": -0.26195811664252966,
+    "avg_daily_return": 0.0036081233399052537,
+    "days": 98.20833333333333,
+    "trades": 10,
+    "wins": 2,
+    "profit_factor": 3.071167097027007,
+    "buy_hold": 0.6891795004158421
+   }
+  },
+  {
+   "coin": "AVAX",
+   "candles": 4920,
+   "days": 196,
+   "all": {
+    "total_return": -0.05656321015758581,
+    "max_drawdown": -0.394768547944671,
+    "avg_daily_return": -0.0002879756138697623,
+    "days": 196.41666666666666,
+    "trades": 22,
+    "wins": 3,
+    "profit_factor": 0.8662672626500821,
+    "buy_hold": 0.22845055526176616
+   },
+   "no_fees": {
+    "total_return": -0.02912853436630025,
+    "max_drawdown": -0.37936992560513827,
+    "avg_daily_return": -0.0001482997082713632,
+    "days": 196.41666666666666,
+    "trades": 22,
+    "wins": 3,
+    "profit_factor": 0.9286747475624663,
+    "buy_hold": 0.22845055526176616
+   },
+   "first_half": {
+    "total_return": -0.22358376711521843,
+    "max_drawdown": -0.22358376711521843,
+    "avg_daily_return": -0.0022775935529563847,
+    "days": 98.16666666666667,
+    "trades": 10,
+    "wins": 1,
+    "profit_factor": 0.07534207066169644,
+    "buy_hold": -0.31234267583289266
+   },
+   "second_half": {
+    "total_return": 0.21500673164941775,
+    "max_drawdown": -0.22124885400845973,
+    "avg_daily_return": 0.0021892921338930956,
+    "days": 98.20833333333333,
+    "trades": 12,
+    "wins": 2,
+    "profit_factor": 1.921224179447507,
+    "buy_hold": 0.7721190668721298
+   }
+  }
+ ],
+ "rule": "cross"
+}

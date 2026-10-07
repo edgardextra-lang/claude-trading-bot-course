@@ -1,6 +1,6 @@
 """Tests written before the code: strategy signals, fee math, drawdown math, no look-ahead, dry-run safety."""
 import json, math, pytest
-from bot import data, strategy, backtest, metrics, runner, monitor, breakout, rsi_dip
+from bot import data, strategy, backtest, metrics, runner, monitor, breakout, rsi_dip, ma_cross, tune
 
 
 def candle(t, o, h, l, c): return {"t": t * 3600_000, "o": o, "h": h, "l": l, "c": c, "v": 1.0}
@@ -190,6 +190,19 @@ def test_rsi_rule_buys_oversold_and_sells_the_bounce():
 
 def test_every_rule_is_free_of_look_ahead():
     cs = ramp(260, 100, 200) + ramp(40, 200, 150, t0=260) + ramp(60, 150, 240, t0=300) + ramp(60, 240, 140, t0=360)
-    for rule in (strategy, breakout, rsi_dip):
+    for rule in (strategy, breakout, rsi_dip, ma_cross, tune.pullback(10, 30, 1.5)):
         full = backtest.run(cs, rule=rule)["equity"]
         for k in (270, 320, 390): assert backtest.run(cs[:k], rule=rule)["equity"] == pytest.approx(full[:k])
+
+
+def test_cross_buys_only_on_the_candle_the_averages_cross():
+    cs = ramp(260, 200, 100) + ramp(200, 100, 260, t0=260); ind = ma_cross.indicators(cs)
+    buys = [i for i in range(206, len(cs)) if (ma_cross.decide(i, cs, ind, None) or {}).get("action") == "buy"]
+    assert len(buys) == 1 and ind["fast"][buys[0]] > ind["slow"][buys[0]] and ind["fast"][buys[0] - 1] <= ind["slow"][buys[0] - 1]
+
+def test_cross_sells_when_the_fast_average_falls_back_below():
+    cs = ramp(260, 100, 200) + ramp(260, 200, 80, t0=260); ind = ma_cross.indicators(cs); assert ma_cross.decide(len(cs) - 1, cs, ind, {"entry": 150, "stop": 100})["action"] == "sell"
+
+def test_tuned_rule_with_default_settings_matches_the_original():
+    cs = ramp(260, 100, 200) + ramp(40, 200, 170, t0=260) + ramp(60, 170, 230, t0=300) + ramp(60, 230, 150, t0=360)
+    assert backtest.run(cs, rule=tune.pullback(20, 50, 2.0))["equity"] == pytest.approx(backtest.run(cs)["equity"])

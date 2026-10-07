@@ -1,0 +1,6 @@
+# Dry-run and backtests need nothing beyond Python 3.10+. Use a virtual environment.
+# Only for --live (pinned on purpose):
+hyperliquid-python-sdk==0.24.0
+eth-account>=0.10.0,<0.14.0
+# Tests:
+pytest

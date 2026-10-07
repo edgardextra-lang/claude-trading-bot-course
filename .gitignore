@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+.venv/
+venv/
+.DS_Store
+__pycache__/
+.pytest_cache/
+data/
+runs/log_*.jsonl
+runs/state_*.json
+runs/log.jsonl
+*.pyc
+*.tmp

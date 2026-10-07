@@ -8,6 +8,7 @@ SELL when price closes below its 50-candle average.
 Long only. One position at a time. Decisions use closed candles only.
 """
 FAST, MID, SLOW, ATR_N, ATR_MULT = 20, 50, 200, 14, 2.0
+WARM = SLOW + 5       # the rule cannot trade before this candle
 
 
 def ema(values, n):

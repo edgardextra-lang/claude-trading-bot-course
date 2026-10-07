@@ -34,6 +34,18 @@ Profitable on 3 of 8 coins, average -8.0%. It lost to simply holding on all 8.
 
 **4-hour candles, 786 days measured (HYPE: 636 days, it has less history):** profitable on 6 of 8, average +11.8%, with drawdowns between -23% and -70%. On 4 of the 8 coins the first and second half of the period point in opposite directions.
 
+## Two more rules, same test
+
+The course then tests two more popular ideas with the same command (`python -m bot.robustness 1h 205 breakout`, or `rsi`).
+
+| Rule | 1-hour: profitable coins, average | 4-hour: profitable coins, average | What breaks it |
+|---|---|---|---|
+| Pullback (above) | 3 of 8, -8.0% | 6 of 8, +11.8% | Loses to holding on all 8 at 1h; drawdowns to -70% at 4h |
+| Breakout (20-candle high) | 5 of 8, +21.2% | 3 of 8, +27.5% | 7 of 8 coins flat or negative in the first half at 1h; at 4h one coin (XRP +264%) carries the average, which is -6.2% without it |
+| RSI dip-buy (below 30) | 4 of 8, +2.7% | 3 of 8, +10.9% | Wins about 60% of trades yet loses to holding on 6 of 8; at 4h the two halves flip on 7 of 8 coins |
+
+None of the three passes. Each has one table, coin or number that would make a convincing advert.
+
 What to take from it:
 1. Fees turn a small gain into a loss (BTC 1h: +8.5% before fees, -4.5% after).
 2. A result on one coin or one timeframe means little. Run the same rule everywhere before believing it.
@@ -44,7 +56,7 @@ Reproduce it: `python -m bot.robustness 1h 205` and `python -m bot.robustness 4h
 ## Run it
 
 ```bash
-python -m pytest -q                      # 30 tests
+python -m pytest -q                      # 36 tests
 python -m bot.robustness                 # the table above
 python -m bot.runner --coin BTC --once   # dry-run: logs what it would do, sends nothing
 python -m bot.monitor runs/log_BTC_dry.jsonl
@@ -67,6 +79,6 @@ Before real money, know what this bot does not do:
 
 ## Layout
 
-`bot/data.py` price history · `bot/strategy.py` the rule · `bot/backtest.py` replay with fees · `bot/metrics.py` return, drawdown, capital for a daily target · `bot/robustness.py` the honest test · `bot/runner.py` dry-run and live · `bot/monitor.py` the two numbers to watch · `tests/` 30 tests.
+`bot/data.py` price history · `bot/strategy.py` the rule · `bot/breakout.py` and `bot/rsi_dip.py` two more rules · `bot/backtest.py` replay with fees · `bot/metrics.py` return, drawdown, capital for a daily target · `bot/robustness.py` the honest test · `bot/runner.py` dry-run and live · `bot/monitor.py` the two numbers to watch · `tests/` 36 tests.
 
 MIT licence.

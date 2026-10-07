@@ -1,6 +1,6 @@
 """Tests written before the code: strategy signals, fee math, drawdown math, no look-ahead, dry-run safety."""
 import json, math, pytest
-from bot import data, strategy, backtest, metrics, runner, monitor
+from bot import data, strategy, backtest, metrics, runner, monitor, breakout, rsi_dip
 
 
 def candle(t, o, h, l, c): return {"t": t * 3600_000, "o": o, "h": h, "l": l, "c": c, "v": 1.0}
@@ -168,3 +168,28 @@ def test_state_survives_a_restart(tmp_path):
 
 def test_cache_refuses_odd_coin_names(tmp_path):
     with pytest.raises(ValueError): data.candles("../x", "1h", 0, 10, cache_dir=tmp_path, fetch=lambda *a: [])
+
+
+# ---- the two extra rules ----
+def test_breakout_buys_a_new_high_and_ignores_a_range():
+    cs = flat(260, 100.0); assert breakout.decide(259, cs, breakout.indicators(cs), None) is None
+    cs.append(candle(260, 100, 106, 100, 105)); s = breakout.decide(260, cs, breakout.indicators(cs), None); assert s["action"] == "buy" and s["stop"] < 105
+
+def test_breakout_window_does_not_include_the_current_candle():
+    cs = flat(260, 100.0) + [candle(260, 100, 106, 100, 105)]; assert breakout.indicators(cs)["hi"][260] == 100.0
+
+def test_breakout_sells_a_new_low():
+    cs = flat(260, 100.0) + [candle(260, 100, 100, 93, 94)]; assert breakout.decide(260, cs, breakout.indicators(cs), {"entry": 100, "stop": 80})["action"] == "sell"
+
+def test_rsi_is_high_after_gains_and_low_after_losses():
+    assert rsi_dip.rsi([float(x) for x in range(1, 40)], 14)[-1] == 100.0 and rsi_dip.rsi([float(x) for x in range(40, 1, -1)], 14)[-1] == pytest.approx(0.0)
+
+def test_rsi_rule_buys_oversold_and_sells_the_bounce():
+    cs = flat(220, 100.0) + ramp(20, 100, 70, t0=220); i = len(cs) - 1; s = rsi_dip.decide(i, cs, rsi_dip.indicators(cs), None); assert s["action"] == "buy"
+    cs += ramp(20, 70, 95, t0=240); i = len(cs) - 1; assert rsi_dip.decide(i, cs, rsi_dip.indicators(cs), {"entry": 70, "stop": 50})["action"] == "sell"
+
+def test_every_rule_is_free_of_look_ahead():
+    cs = ramp(260, 100, 200) + ramp(40, 200, 150, t0=260) + ramp(60, 150, 240, t0=300) + ramp(60, 240, 140, t0=360)
+    for rule in (strategy, breakout, rsi_dip):
+        full = backtest.run(cs, rule=rule)["equity"]
+        for k in (270, 320, 390): assert backtest.run(cs[:k], rule=rule)["equity"] == pytest.approx(full[:k])

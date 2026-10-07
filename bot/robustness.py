@@ -9,29 +9,33 @@ from . import data, backtest, metrics, strategy
 COINS = ["BTC", "ETH", "SOL", "HYPE", "XRP", "DOGE", "SUI", "AVAX"]
 
 
-WARM = strategy.SLOW + 5          # the rule cannot trade before this candle, so nothing is measured before it
+from . import breakout, rsi_dip
+RULES = {"pullback": strategy, "breakout": breakout, "rsi": rsi_dip}
+WARM = strategy.WARM              # every rule shares this warm-up, so all are measured over the same days
 
 
-def one(candles, fee=backtest.FEE, slippage=backtest.SLIPPAGE):
+def one(candles, fee=backtest.FEE, slippage=backtest.SLIPPAGE, rule=strategy):
     """Result over candles[WARM:]. The first WARM candles only warm up the averages."""
-    r = backtest.run(candles, fee=fee, slippage=slippage, close_at_end=True); days = (candles[-1]["t"] - candles[WARM]["t"]) / 86_400_000
+    r = backtest.run(candles, fee=fee, slippage=slippage, close_at_end=True, rule=rule); days = (candles[-1]["t"] - candles[WARM]["t"]) / 86_400_000
     s = metrics.summary(r["start"], r["equity"][WARM:], r["trades"], days); s["buy_hold"] = candles[-1]["c"] / candles[WARM]["c"] - 1; return s
 
 
-def table(interval="1h", days=205, coins=COINS, end_ms=None):
+def table(interval="1h", days=205, coins=COINS, end_ms=None, rule=strategy):
     if interval not in data.STEP_MS: raise SystemExit(f"interval must be one of {sorted(data.STEP_MS)}")
     end = end_ms or int(time.time() // 86400 * 86400 * 1000) - 1; start = end - days * 86_400_000; rows = []
     for coin in coins:
         cs = data.candles(coin, interval, start, end)
         if len(cs) < 600: continue
         half = (len(cs) + WARM) // 2     # split the measured part in two; the second half gets its own warm-up from the candles before it
-        rows.append({"coin": coin, "candles": len(cs), "days": round((cs[-1]["t"] - cs[WARM]["t"]) / 86_400_000), "all": one(cs), "no_fees": one(cs, 0.0, 0.0), "first_half": one(cs[:half]), "second_half": one(cs[half - WARM:])})
+        rows.append({"coin": coin, "candles": len(cs), "days": round((cs[-1]["t"] - cs[WARM]["t"]) / 86_400_000), "all": one(cs, rule=rule), "no_fees": one(cs, 0.0, 0.0, rule=rule), "first_half": one(cs[:half], rule=rule), "second_half": one(cs[half - WARM:], rule=rule)})
     return {"interval": interval, "start_ms": start, "end_ms": end, "rows": rows}
 
 
 if __name__ == "__main__":
-    t = table(interval=sys.argv[1] if len(sys.argv) > 1 else "1h", days=int(sys.argv[2]) if len(sys.argv) > 2 else 205)
-    Path("runs").mkdir(exist_ok=True); Path(f"runs/robustness_{t['interval']}.json").write_text(json.dumps(t, indent=1))
+    name = sys.argv[3] if len(sys.argv) > 3 else "pullback"
+    if name not in RULES: raise SystemExit(f"rule must be one of {sorted(RULES)}")
+    t = table(interval=sys.argv[1] if len(sys.argv) > 1 else "1h", days=int(sys.argv[2]) if len(sys.argv) > 2 else 205, rule=RULES[name]); t["rule"] = name
+    Path("runs").mkdir(exist_ok=True); Path(f"runs/robustness_{name}_{t['interval']}.json").write_text(json.dumps(t, indent=1)); print("rule:", name)
     p = lambda v: f"{v:+7.1%}"
     print(f"{'coin':5} {'days':>5} {'return':>8} {'no fees':>8} {'max dd':>8} {'trades':>6} {'wins':>5} {'1st half':>9} {'2nd half':>9} {'buy+hold':>9}")
     for r in t["rows"]:
